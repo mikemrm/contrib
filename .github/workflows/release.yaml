@@ -1,0 +1,42 @@
+name: Release Helm
+
+on:
+  push:
+    tags:
+      - '*@v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure chart version
+        id: release_meta
+        run: |
+          cat >> "$GITHUB_OUTPUT" <<EOF
+          release_path=$(cut -d @ -f 1 <<<"${{ github.ref_name }}")
+          release_version=$(cut -d @ -f 2- <<<"${{ github.ref_name }}")
+          EOF
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./${{ steps.release_meta.outputs.release_path }}/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ steps.release_meta.outputs.release_path }}:${{ steps.release_meta.outputs.release_version }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}/${{ steps.release_meta.outputs.release_path }}
