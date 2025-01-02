@@ -7,6 +7,8 @@ RUN apk add git && go install github.com/pdf/zfs_exporter/v2@${ZFS_EXPORTER_VERS
 
 FROM alpine:3.21
 
+RUN apk add zfs
+
 COPY --from=build /go/bin/zfs_exporter /bin/
 
 EXPOSE 9134

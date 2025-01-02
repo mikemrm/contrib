@@ -24,7 +24,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure chart version
+      - name: Configure release version
         id: release_meta
         run: |
           cat >> "$GITHUB_OUTPUT" <<EOF
