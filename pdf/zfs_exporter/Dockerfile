@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS build
+FROM golang:1.24-alpine AS build
 
 # renovate: datasource=go packageName=github.com/pdf/zfs_exporter/v2
 ARG ZFS_EXPORTER_VERSION=v2.3.4
