@@ -5,7 +5,7 @@ ARG ZFS_EXPORTER_VERSION=v2.3.11
 
 RUN apk add git && go install github.com/pdf/zfs_exporter/v2@${ZFS_EXPORTER_VERSION}
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk add zfs
 
